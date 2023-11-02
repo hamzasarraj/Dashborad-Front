@@ -11,7 +11,9 @@ pipeline {
         DOCKER_IMAGE_TAG = 'latest'
         DOCKER_HUB = 'dckr_pat_VYQcIqxKa0F90mo2s7ZLWAqzi7M'
     }
-
+    tools {
+        nodejs "NODEJS" // Specify the Node.js installation configured in Jenkins
+    }
     stages {
         stage('Git') {
             steps {
