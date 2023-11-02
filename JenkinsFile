@@ -42,7 +42,7 @@ pipeline {
                     def nexusArtifactUrl = "${NEXUS_URL}/${NEXUS_REPO}/${ARTIFACT_GROUP}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.tar.gz"
 
                     // Deploy the artifact to Nexus
-                    sh "curl -v --user admin:nexus --upload-file dist/angular-frontend ${nexusArtifactUrl}"
+                    sh "curl -v --user admin:hiba --upload-file dist/angular-frontend ${nexusArtifactUrl}"
                 }
             }
         }
