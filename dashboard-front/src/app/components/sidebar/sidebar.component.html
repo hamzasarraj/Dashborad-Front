@@ -1,0 +1,25 @@
+<div class="logo">
+
+  <a href="https://www.vermeg.com/fr/" >
+    <img src="./assets/img/vermeg.png"  style=" height: 50px;
+    width: 90px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}"/>
+  </a>
+</div>
+<div class="sidebar-wrapper">
+  <ul class="nav">
+    <li
+      routerLinkActive="active"
+      *ngFor="let menuItem of menuItems"
+      class="{{ menuItem.class }} nav-item"
+    >
+      <a [routerLink]="[menuItem.path]">
+        <i class="tim-icons  {{ menuItem.icon }}"></i>
+        <p>{{ menuItem.title }}</p>
+      </a>
+    </li>
+  </ul>
+</div>

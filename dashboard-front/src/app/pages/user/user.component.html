@@ -1,0 +1,121 @@
+<div class=" card">
+  <div class=" card-header">
+    <button class="btn btn-secondary float-right" (click)="add(content)">Nouvel utilisateur</button>
+  </div>
+  <div class=" card-body">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Nom et prénom</th>
+        <th scope="col">Email</th>
+        <th scope="col">Role</th>
+        <th scope="col">Opérations</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of users">
+        <th scope="row">{{item.name}}</th>
+        <th scope="row">{{item.email}}</th>
+        <th scope="row">{{item.role === 'ADMIN' ? 'Administrateur' : 'Simple utilisateur'}}</th>
+        <th scope="row" width="10%">
+          <button  class="close" routerLink="/user/{{item.id}}">
+            <i class="tim-icons icon-link-72"></i>
+          </button>
+          <button *ngIf="currentUser.id!== item.id" class="close" (click)="delete(contentDelete, item)">
+            <i class="tim-icons icon-trash-simple"></i>
+          </button>
+          <button *ngIf="currentUser.id!== item.id" class="close mr-2" (click)="edit(content, item)">
+            <i class="tim-icons icon-pencil"></i>
+          </button>
+
+        </th>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <form #f="ngForm" (ngSubmit)="f.valid && validate(modal)">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{title}}</h4>
+      <button type="reset" class="close" (click)="modal.dismiss()">
+        <i class="tim-icons icon-simple-remove" aria-label="Close"></i>
+      </button>
+
+    </div>
+    <div class="modal-body">
+
+
+      <label>Nom et prénom</label>
+      <div class="form-group">
+        <input class="form-control {{f.submitted && fullName.invalid ? 'is-invalid': ''}}" name="fullName"
+               [(ngModel)]="user.name" required #fullName="ngModel">
+        <span class="error invalid-feedback">Nom et prénom est obligatoire.</span>
+      </div>
+
+      <label>Email</label>
+      <div class="form-group">
+        <input type="email" class="form-control {{f.submitted && mail.invalid ? 'is-invalid': ''}}"
+               required email #mail="ngModel"
+               name="mail" [(ngModel)]="user.email">
+        <span class="error invalid-feedback">
+        <span *ngIf="mail?.errors?.required">Email est obligatoire.</span>
+        <span *ngIf="mail?.errors?.email">Email est invalid.</span>
+        </span>
+      </div>
+
+      <div *ngIf="!user.id">
+        <label>Mot de passe</label>
+        <div class="form-group">
+          <input type="password" class="form-control  {{f.submitted && pwd.invalid ? 'is-invalid': ''}}"
+                 required #pwd="ngModel"
+                 name="password" [(ngModel)]="user.password">
+          <span class="error invalid-feedback">Mot de passe est obligatoire.</span>
+        </div>
+        <label>Confirmer mot de passe</label>
+        <div class="form-group">
+          <input type="password" class="form-control  {{f.submitted && pwd2.invalid ? 'is-invalid': ''}}"
+                 required #pwd2="ngModel" [pattern]="user.password"
+                 name="password2" [(ngModel)]="confirmPassword">
+          <span class="error invalid-feedback">
+        <span *ngIf="pwd2?.errors?.required">Confirmer mot de passe est obligatoire.</span>
+        <span *ngIf="pwd2?.errors?.pattern">Mots de passe n'est pas identique.</span>
+        </span>
+        </div>
+      </div>
+      <label>Role</label>
+      <div class="form-group">
+        <select class="form-control  {{f.submitted && role.invalid ? 'is-invalid': ''}}"
+                required #role="ngModel" [(ngModel)]="user.role" name="role">
+          <option value="ADMIN">Administrateur</option>
+          <option value="SIMPLE_USER">Simple utilisateur</option>
+        </select>
+        <span class="error invalid-feedback">Role est obligatoire.</span>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+
+      <button type="submit" class="btn btn-success">{{user.id ? 'Modifier' : 'Ajouter'}}</button>
+
+    </div>
+  </form>
+</ng-template>
+
+
+<ng-template #contentDelete let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title1">Confirmation</h4>
+    <button type="reset" class="close" (click)="modal.dismiss()">
+      <i class="tim-icons icon-simple-remove" aria-label="Close"></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    Vous etes sur de supprimet cet utilisateur?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">Annuller</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close()">OK</button>
+  </div>
+</ng-template>

@@ -1,0 +1,25 @@
+<div class=" card">
+
+  <div class=" card-body">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">Application</th>
+        <th scope="col" width="10%">Affecter</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of assingnedApplication">
+        <th scope="row">{{item?.application?.name}}</th>
+        <th scope="row">
+          <input type="checkbox"  id="toggleSwitch" [(ngModel)]="item.checked"   (change)="onCheckboxChange(item)">
+        </th>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+
