@@ -10,6 +10,10 @@ pipeline {
         DOCKER_REPO = 'hamza1991/dashboard_front'
         DOCKER_IMAGE_TAG = 'latest'
         DOCKER_HUB = 'dckr_pat_VYQcIqxKa0F90mo2s7ZLWAqzi7M'
+        NODEJS_HOME = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+        DOCKER_IMAGE_NAME = 'dashbord-front'
+        NEXUS_REPO_URL = 'http://172.17.0.2:8081/repository/front-dashboard/'
+        DOCKERHUB_REPO = 'hamza1991/dashboard_front
     }
     tools {
         nodejs "NODEJS" // Specify the Node.js installation configured in Jenkins
@@ -37,35 +41,34 @@ pipeline {
         }
 
 
-        stage('Publish to Nexus') {
+       stage('Deploy to Nexus') {
             steps {
                 script {
-                    def artifactPath = "dist/${ARTIFACT_NAME}-{ARTIFACT_VERSION}.tar.gz"
-                    def nexusArtifactUrl = "${NEXUS_URL}/${NEXUS_REPO}/${ARTIFACT_GROUP}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.tar.gz"
-
-                    // Deploy the artifact to Nexus
-                    sh "curl -v --user admin:hiba --upload-file dist/angular-frontend ${nexusArtifactUrl}"
+                    def nexusCredentials = credentials('nexus-credentials')
+                    sh "mvn deploy:deploy-file -Durl=${NEXUS_REPO_URL} -DrepositoryId=nexus -Dfile=target/artifact.jar -DgroupId=com.example -DartifactId=artifact -Dversion=1.0.0 -Dpackaging=jar -DgeneratePom=true -DrepositoryId=nexus -DrepositoryUsername=${nexusCredentials.username} -DrepositoryPassword=${nexusCredentials.password}"
                 }
             }
         }
 
-        stage('Pull & Build Docker Image') {
+stage('Build Docker Image') {
             steps {
-                sh "curl -o angular-final.jar ${NEXUS_URL}/${NEXUS_REPO}/${ARTIFACT_GROUP}/${ARTIFACT_NAME}/${ARTIFACT_VERSION}/${ARTIFACT_NAME}-${ARTIFACT_VERSION}.tar.gz" // Télécharger l'archive depuis Nexus
-
-                sh "docker build -t angular-final:latest -f /home/hiba/Dashborad-Front/dashboard-front/Dockerfile /home/hiba/Dashboard-Front"
+                script {
+                    sh 'docker build -t ${DOCKER_IMAGE_NAME} .'
+                }
             }
         }
-
-        stage('Push Docker Image to Docker Hub') {
+        
+        stage('Push to DockerHub') {
             steps {
-                sh "docker tag angular-final:latest ${DOCKER_REPO}:${DOCKER_IMAGE_TAG}"
-                sh "docker login -u hamza1991 -p ${DOCKER_HUB}"
-                sh "docker push ${DOCKER_REPO}:${DOCKER_IMAGE_TAG}"
+                script {
+                    withDockerRegistry([credentialsId: 'dockerhub-credentials-id', url: 'https://index.docker.io/v1/']) {
+                        sh "docker tag ${DOCKER_IMAGE_NAME} ${DOCKERHUB_REPO}:${env.BUILD_NUMBER}"
+                        sh "docker push ${DOCKERHUB_REPO}:${env.BUILD_NUMBER}"
+                    }
+                }
             }
         }
     }
-
     post {
         always {
             sh 'npm cache clean --force' // Nettoyer le cache npm
