@@ -41,15 +41,6 @@ pipeline {
         }
 
 
-       stage('Deploy to Nexus') {
-            steps {
-                script {
-                    def nexusCredentials = credentials('nexus-credentials')
-                    sh "mvn deploy:deploy-file -Durl=${NEXUS_REPO_URL} -DrepositoryId=nexus -Dfile=target/artifact.jar -DgroupId=com.example -DartifactId=artifact -Dversion=1.0.0 -Dpackaging=jar -DgeneratePom=true -DrepositoryId=nexus -DrepositoryUsername=${nexusCredentials.username} -DrepositoryPassword=${nexusCredentials.password}"
-                }
-            }
-        }
-
 stage('Build Docker Image') {
             steps {
                 script {
