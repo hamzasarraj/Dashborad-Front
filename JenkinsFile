@@ -52,7 +52,7 @@ stage('Build Docker Image') {
         stage('Push to DockerHub') {
             steps {
                 script {
-                    withDockerRegistry([credentialsId: 'dockerhub-credentials-id', url: 'https://index.docker.io/v1/']) {
+                    withDockerRegistry([credentialsId: 'dashboard', url: 'https://index.docker.io/v1/']) {
                         sh "docker tag ${DOCKER_IMAGE_NAME} ${DOCKERHUB_REPO}:${env.BUILD_NUMBER}"
                         sh "docker push ${DOCKERHUB_REPO}:${env.BUILD_NUMBER}"
                     }
