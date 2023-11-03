@@ -13,7 +13,7 @@ pipeline {
         NODEJS_HOME = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
         DOCKER_IMAGE_NAME = 'dashbord-front'
         NEXUS_REPO_URL = 'http://172.17.0.2:8081/repository/front-dashboard/'
-        DOCKERHUB_REPO = 'hamza1991/dashboard_front
+        DOCKERHUB_REPO = 'hamza1991/dashboard_front'
     }
     tools {
         nodejs "NODEJS" // Specify the Node.js installation configured in Jenkins
