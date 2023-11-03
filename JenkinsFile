@@ -10,7 +10,6 @@ pipeline {
         DOCKER_REPO = 'hamza1991/dashboard_front'
         DOCKER_IMAGE_TAG = 'latest'
         DOCKER_HUB = 'dckr_pat_VYQcIqxKa0F90mo2s7ZLWAqzi7M'
-        NODEJS_HOME = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
         DOCKER_IMAGE_NAME = 'dashbord-front'
         NEXUS_REPO_URL = 'http://172.17.0.2:8081/repository/front-dashboard/'
         DOCKERHUB_REPO = 'hamza1991/dashboard_front'
